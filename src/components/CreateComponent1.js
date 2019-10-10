@@ -1,135 +1,217 @@
-<<<<<<< HEAD
+// @flow
 import React from 'react';
+import CreateComponent3 from './CreateComponent3';
 
-class CreateComponent1 extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      cardNumber: '',
-      expirationDate: '',
-      cvv: '',
-      firstName: '',
-      lastName: '',
-      style: undefined,
-    };
-  }
+type Props = {|
+  onSubmit: (
+    param1: string,
+    param2: string,
+    param3: string,
+    param4: string,
+    param5: string,
+    param6: string,
+    param7: boolean,
+  ) => void,
+  onCardtype: (param1: string) => void,
+|};
+
+type State = {
+  cardNumber: string,
+  expirationDate: string,
+  cvv: string,
+  firstName: string,
+  lastName: string,
+  styleError: string,
+  validationResult?: boolean,
+};
+
+class CreateComponent1 extends React.Component<Props, State> {
+  state = {
+    cardNumber: '',
+    expirationDate: '',
+    cvv: '',
+    firstName: '',
+    lastName: '',
+    styleError: 'off',
+    validationResult: false,
+  };
 
   hangleChange = e => {
     const { name } = e.target;
     const { value } = e.target;
 
+    const { cardNumber, cvv, expirationDate, firstName, lastName } = this.state;
+
     this.setState({
       [name]: value,
+      styleError: 'off',
+      validationResult: this.checkFields(
+        cardNumber,
+        cvv,
+        expirationDate,
+        firstName,
+        lastName,
+      ),
     });
   };
-  handleClick = () => {
-    this.check();
-    this.setState({
-      style: this.check()
-    })
-  };
 
-  check(cardNumber, expirationDate, cvv, firstName, lastName, style) {
-    return this.state.cardNumber.length === 16 ? true : false;
-  }
+  handleClick = () => {
+    const {
+      cardNumber,
+      cvv,
+      expirationDate,
+      firstName,
+      lastName,
+      validationResult,
+      styleError,
+    } = this.state;
+
+    this.setState({
+      styleError: 'on',
+      validationResult: this.checkFields(
+        cardNumber,
+        cvv,
+        expirationDate,
+        firstName,
+        lastName,
+      ),
+    });
+
+    this.props.onSubmit(
+      cardNumber,
+      expirationDate,
+      cvv,
+      firstName,
+      lastName,
+      validationResult,
+      styleError,
+    );
+  };
 
   preventDefault = e => {
     e.preventDefault();
+  };
+
+  checkDate(expirationDate) {
+    if (
+      !isNaN(expirationDate.slice(0, 2)) &&
+      +expirationDate.slice(0, 2) < 13 &&
+      !isNaN(expirationDate.substr(3, 2)) &&
+      expirationDate.length === 5
+    )
+      return false;
+
+    return true;
   }
 
+  checkFields = (cardNumber, cvv, expirationDate, firstName, lastName) => {
+    return (
+      cardNumber.length === 16 &&
+      (cvv.length < 5 && cvv.length > 2) &&
+      !this.checkDate(expirationDate) &&
+      firstName.length > 2 &&
+      lastName.length > 3
+    );
+  };
+
   render() {
+    const {
+      cardNumber,
+      expirationDate,
+      cvv,
+      firstName,
+      lastName,
+      styleError,
+    } = this.state;
+
     return (
       <>
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <form onSubmit={this.preventDefault}>
-            Card Info<br></br>
+        <div>
+          <form onSubmit={this.preventDefault} className="form">
+            Card Info
             <label>
               Ваш номер кредитной карты:
               <input
                 type="tel"
                 name="cardNumber"
+                required
                 onChange={this.hangleChange}
                 maxLength="16"
-                minLength="16"
                 placeholder="****-****-****-****"
-                style={
-                  this.state.style
-                    ? { borderColor: 'red' }
-                    : { borderColor: 'black' }
-                }
-              />
+                className={`${styleError} ${
+                  cardNumber.length < 16 ? 'true' : ''
+                } `}
+              ></input>
             </label>
-            <br></br>
             <label>
               Карта годна до
               <input
                 type="numder"
                 name="expirationDate"
+                maxLength="5"
+                pattern="([0-9]{2}[/]?){2}"
+                required
                 onChange={this.hangleChange}
                 placeholder="**/**"
+                className={`${styleError} ${
+                  this.checkDate(expirationDate) ? 'true' : ''
+                } `}
               />
             </label>
-            <br></br>
             <label>
               Введите CVV
-              <input type="number" name="cvv" onChange={this.hangleChange} />
+              <input
+                type="tel"
+                name="cvv"
+                maxLength="4"
+                required
+                placeholder="***"
+                onChange={this.hangleChange}
+                className={`${styleError} ${
+                  cvv.length > 5 || cvv.length < 2 ? 'true' : ''
+                } `}
+              />
             </label>
-            <br></br>
             <label>
               Введите Имя
               <input
                 type="text"
                 name="firstName"
+                maxLength="16"
+                required
                 onChange={this.hangleChange}
+                className={`${styleError} ${
+                  firstName.length < 2 ? 'true' : ''
+                } `}
               />
             </label>
-            <br></br>
             <label>
               Введите Фамилию
-              <input type="text" name="lastName" onChange={this.hangleChange} />
+              <input
+                type="text"
+                name="lastName"
+                maxLength="16"
+                required
+                onChange={this.hangleChange}
+                className={`${styleError} ${
+                  lastName.length < 2 ? 'true' : ''
+                } `}
+              />
             </label>
-            <br></br>
             <input
               type="submit"
               onClick={this.handleClick}
               value="Зарегистрироваться"
             />
-            <br></br>
           </form>
         </div>
+        <CreateComponent3
+          onCardtype={this.props.onCardtype}
+          cardNumber={cardNumber}
+        />
       </>
     );
   }
 }
 
 export default CreateComponent1;
-=======
-import React from 'react'
-
-class CreateComponent1 extends React.Component {
-    state={
-        buttonclick:true
-    }
-    render(){
-        return(
-            <div>
-                <form >
-                    <label> Ваш номер кредитной карты: <input type="number" name="cardNumber" placeholder={this.handleClick.buttonclick ? 'Ошибка' : 'Все верно'}/> </label><br></br>
-                    <label> Карта годна до <input type="numder" name="expirationDate" placeholder={this.handleClick.buttonclick ? 'Ошибка': 'Все верно'} /></label><br></br> 
-                    <label> Введите CVV <input type="text" name="cvv" placeholder={this.handleClick.buttonclick ? 'Ошибка' : 'Все верно'}/></label><br></br>                  
-                    <input type="submit" onClick={this.handleClick} value= "Зарегистрироваться" /><br></br>
-                </form>
-            </div>
-        )
-    }
-    handleClick = () =>{
-        this.setState({
-            buttonclick: !this.state.buttonclick
-        })
-    }
-}
-
-
-
-export default CreateComponent1
->>>>>>> 7e6d8f6039f7cfea35b6649c0282c08ea86803c3

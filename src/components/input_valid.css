@@ -1,0 +1,20 @@
+ .on.true {
+    border: 2px solid red;
+  }
+input{ margin: 10px;
+      display:block;
+}
+
+.form{
+  display: flex;
+  background: #F0F0F0;
+  width: 250px;
+  justify-Content: center;
+  padding: 32px;
+  flex-direction: column;
+  margin: 0 auto;
+
+}
+body{
+  background: #61F09F;
+}
