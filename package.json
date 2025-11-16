@@ -5,7 +5,7 @@
   "dependencies": {
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
-    "react-scripts": "3.1.2"
+    "react-scripts": "5.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -34,7 +34,7 @@
     "@babel/core": "^7.6.3",
     "@babel/preset-flow": "^7.0.0",
     "babel-eslint": "^10.0.3",
-    "eslint": "^6.5.1",
+    "eslint": "^9.39.1",
     "flow-bin": "^0.109.0"
   }
 }
